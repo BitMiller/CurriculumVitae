@@ -1,0 +1,52 @@
+
+"""
+
+- @250303-1-0618
+
+> repo:
+...
+
+> https://github.com/BitMiller/quakedemy
+
+> git@github.com:BitMiller/python_for_termux__base_projects.git
+
+//1#=====//
+
+- Termux:
+
+> cd /storage/emulated/0/BitMiller/Pradhana/_no_sync_Dropbox/bitmiller_hu/quakedemy/git
+
+> git init
+
+> git remote add origin git@github.com:BitMiller/quakedemy.git
+
+> git add .
+
+> git commit -m "Initial commit"
+
+> git push -u origin main
+
+
+check activity:
+> https://github.com/BitMiller
+
+
+
+
+
+> cd /storage/emulated/0/BitMiller/Pradhana/_no_sync_Dropbox/bitmiller_hu/quakedemy/git
+
+> mkdocs serve
+
+http://127.0.0.1:8000
+
+> to stop: [VolDn+C] (Ctrl+C)
+
+> MkDocs:
+>> https://BitMiller.github.io/quakedemy/
+
+
+
+"""
+
+
