@@ -1,5 +1,14 @@
+:root {
+    --link_color: #0070C0;
+}
+
 body {
-    font-family: "Consolas", monospace;
+    font-family: Consolas, monospace;
+}
+
+a, a:link, a:hover, a:visited, a:active {
+    color: var(--link_color);
+    text-decoration: none;
 }
 
 #textContainer span {
@@ -22,8 +31,55 @@ body {
     text-align: left;
 }
 
-.s01 {
-    font-size: 200%;
+/* Header; Word format: Font size: 14; Bold */
+.s01 { 
+    font-size: 175%;
+    font-weight: bold;
+}
+
+/* Title Bold; Word format: Font size: 10; Bold */
+.s02 { 
+    font-size: 125%;
+    font-weight: bold;
+}
+
+/* Title; Word format: Font size: 10; */
+.s03 { 
+    font-size: 125%;
+}
+
+/* Title link; Word format: Font size: 10; Bold; Italic; #0070C0 (~Blue) */
+.s04 { 
+    font-size: 125%;
+    font-weight: bold;
+    font-style: italic;
+    color: var(--link_color);
+}
+
+/* Small bold italic link; Word format: Font size: 8; Bold; Italic; #0070C0 (~Blue) */
+.s05 { 
+    font-size: 100%;
+    font-weight: bold;
+    font-style: italic;
+    color: var(--link_color);
+}
+
+/* Small bold text; Word format: Font size: 8; Bold */
+.s06 { 
+    font-size: 100%;
+    font-weight: bold;
+}
+
+/* Small italic link; Word format: Font size: 8; Italic; #0070C0 (~Blue) */
+.s07 { 
+    font-size: 100%;
+    font-style: italic;
+    color: var(--link_color);
+}
+
+/* Small plain text; Word format: Font size: 8 */
+.s08 { 
+    font-size: 100%;
 }
 
 /*
