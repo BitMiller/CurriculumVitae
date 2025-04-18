@@ -13,6 +13,28 @@ const protectedChars = new Array(" ", "\"", "'", "\\", "/", "|", ",", ":", ".", 
 const translateX = "1px";
 const translateY = "1px";
 const defaultStyleClass = "s08";
+const color01 = "white";
+/*
+const chrs_numbers = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+const chrs_latin = new Array();
+const chrs_katakana = new Array(
+    "゠", "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク",
+    "ケ", "コ", "サ", "ス", "セ", "ソ", "タ", 
+    "チ", "テ", "ト", "ナ", "ニ", "ヌ", "ノ", "ハ", 
+    "ヒ", "フ", "ヘ", "マ", "ミ", 
+    "ム", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ", "ル", "レ", "ロ", "ワ", 
+    "ヰ", "ヱ", "ヲ", "ヵ", "ヶ", "ヿ"
+    );
+*/
+const charray = new Array(
+/* not mirrored */
+    "", // 0 1 7
+/* mirrored */
+    "", // 2 4 5 8 9
+); //"", 
+const charrayUnmirrored = 0;
+
+
 
 var e_textContainer = document.getElementById("textContainer");
 var letters = new Array();
@@ -66,13 +88,13 @@ function populateContainer() {
                 placeholderCharSpan.style.display = "inline-block";
                 placeholderCharSpan.textContent = " ";
 
-                let binaryCharSpan = document.createElement("span");
-                binaryCharSpan.classList.add("binary");
-                binaryCharSpan.style.display = "none";
-                binaryCharSpan.textContent = "1";
+                let activeCharSpan = document.createElement("span");
+                activeCharSpan.classList.add("active");
+                activeCharSpan.style.display = "none";
+                activeCharSpan.textContent = "1";
 
                 let realCharSpan = document.createElement("span");
-                realCharSpan.classList.add("real");
+                realCharSpan.classList.add("cl_realChar");
                 realCharSpan.style.display = "none";
                 realCharSpan.textContent = cv_text[i][j];
 
@@ -81,13 +103,13 @@ function populateContainer() {
                     hyp.href = hyperLink;
                     hyp.target = "_blank";
                     hyp.appendChild(placeholderCharSpan);
-                    hyp.appendChild(binaryCharSpan);
+                    hyp.appendChild(activeCharSpan);
                     hyp.appendChild(realCharSpan);
                     charSpan.appendChild(hyp);
                 }
                 else {
                     charSpan.appendChild(placeholderCharSpan);
-                    charSpan.appendChild(binaryCharSpan);
+                    charSpan.appendChild(activeCharSpan);
                     charSpan.appendChild(realCharSpan);
                 }
 
@@ -126,35 +148,35 @@ function random01() {
 
 function startFadeInAnimation() {
     letters.forEach((chrSpan, i) => {
-        setTimeout(() => revealChar(chrSpan), i * 1);
+        setTimeout(() => revealChar(chrSpan), i * 4);
     });
 }
 
 function revealChar(chrSpan) {
-    let realCh = chrSpan.querySelector(".real");
+    let realCh = chrSpan.querySelector(".cl_realChar");
     let placeholderCh = chrSpan.querySelector(".placeholder");
 
     if (realCh.innerHTML != " ") {
-        let binaryCh = chrSpan.querySelector(".binary");
+        let activeCh = chrSpan.querySelector(".active");
 
         let flickerCount = 0;
-        const flickerMax = 6 + Math.floor(Math.random() * 4);
+        const flickerMax = 3 + Math.floor(Math.random() * 4);
 
-        binaryCh.innerHTML = random01();
+        activeCh.innerHTML = random01();
         placeholderCh.style.display = "none";
-        binaryCh.style.display = "inline-block";
+        activeCh.style.display = "inline-block";
 
         const flicker = setInterval(() => {
-            binaryCh.innerHTML = random01();
+            activeCh.innerHTML = random01();
             flickerCount++;
 
             if (flickerCount >= flickerMax) {
-                binaryCh.style.display = "none";
+                activeCh.style.display = "none";
                 realCh.style.display = "inline-block";
                 chrSpan.dataset.transitionDone = "1";
                 clearInterval(flicker);
             }
-        }, 20 + Math.random() * 15);
+        }, 80 + Math.random() * 60);
     }
     else {
         placeholderCh.style.display = "none";
@@ -173,9 +195,9 @@ function handleMouseMove(event) {
 
     for (let i = 0; i < letters.length; i++) {
         if (letters[i].dataset.transitionDone == "1") {
-            let realCh = letters[i].querySelector(".real");
-            let binaryCh = letters[i].querySelector(".binary");
-            let protectedChar = protectedChars.includes(realCh.innerHTML);
+            let realCh = letters[i].querySelector(".cl_realChar");
+            let activeCh = letters[i].querySelector(".active");
+            let isProtected = protectedChars.includes(realCh.innerHTML);
             let lx = letters[i].dataset.centerX;
             let ly = letters[i].dataset.centerY;
             let dx = mx - lx;
@@ -185,21 +207,27 @@ function handleMouseMove(event) {
             if (letters[i].dataset.sleep == "1" && dist < effectDistance) {
                 letters[i].style.transform = "translate(" + translateX + ", " + translateY + ")"; // needs "display: inline-block;" set in CSS to work! span's default inline makes it non-working
                 letters[i].dataset.sleep = "0";
-                if (!protectedChar) {
+                if (!isProtected) {
                     letters[i].dataset.origColor = letters[i].style.color;
-                    letters[i].style.color = "green";
-                    binaryCh.innerHTML = random01();
-                    binaryCh.style.display = "inline-block";
+                    letters[i].style.color = color01;
+                    activeCh.innerHTML = random01();
+                    activeCh.style.display = "inline-block";
                     realCh.style.display = "none";
+                }
+                else {
+                    realCh.classList.add("cl_protectedCharGlow");
                 }
             }
             else if (letters[i].dataset.sleep == "0" && dist >= effectDistance) {
                 letters[i].style.transform = "translate(0)";
                 letters[i].dataset.sleep = "1";
-                if (!protectedChar) {
+                if (!isProtected) {
                     letters[i].style.color = letters[i].dataset.origColor;
                     realCh.style.display = "inline-block";
-                    binaryCh.style.display = "none";
+                    activeCh.style.display = "none";
+                }
+                else {
+                    realCh.classList.remove("cl_protectedCharGlow");
                 }
             }
         }
